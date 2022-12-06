@@ -1,15 +1,13 @@
 package com.mops.scheduler.models;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Table;
-import javax.persistence.Id;
+import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
 @Table(name="employees")
 public class Employee {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name="id")
     private UUID id;
     @Column(name="first_name")
