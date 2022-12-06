@@ -11,6 +11,7 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -19,6 +20,7 @@ import static org.mockito.Mockito.when;
 
 public class EmployeeControllerTest {
     Employee mockEmployee;
+    UUID mockEmployeeID;
     ArrayList<Employee> employeeArrayList = new ArrayList<>();
     @Mock
     private EmployeeRepository employeeRepository;
@@ -27,6 +29,10 @@ public class EmployeeControllerTest {
     @BeforeEach
     public void initMocks(){
         MockitoAnnotations.openMocks(this);
+    }
+    @BeforeEach
+    public void generateUUID() {
+        mockEmployeeID = UUID.randomUUID();
     }
     @BeforeEach
     private void prepareMockResponse() {
@@ -40,12 +46,17 @@ public class EmployeeControllerTest {
                 "Sales",
                 "EST"
         );
-        mockEmployee.setId(UUID.randomUUID());
+        mockEmployee.setId(mockEmployeeID);
     }
     @Test
     public void listALlEmployees() {
         employeeArrayList.add(mockEmployee);
         when(employeeRepository.findAll()).thenReturn(employeeArrayList);
         assertEquals(employeeController.list().get(0),mockEmployee);
+    }
+    @Test
+    public void getEmployee() {
+        when(employeeRepository.findById(mockEmployeeID)).thenReturn(Optional.ofNullable(mockEmployee));
+        assertEquals(employeeController.get(mockEmployeeID),Optional.ofNullable(mockEmployee));
     }
 }
